@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "./colors";
@@ -40,18 +40,28 @@ export default function App() {
     };
 
     const deleteTodo = (key) => {
-        Alert.alert("Delete To Do", "Are you sure?", [
-            { text: "Cancel" },
-            {
-                text: "I'm Sure",
-                onPress: () => {
-                    const newToDos = { ...toDos };
-                    delete newToDos[key];
-                    setToDos(newToDos);
-                    saveToDos(newToDos);
+        if (Platform.OS === "web") {
+            const ok = confirm("Do you want to delete this To Do?");
+            if (ok) {
+                const newToDos = { ...toDos };
+                delete newToDos[key];
+                setToDos(newToDos);
+                saveToDos(newToDos);
+            }
+        } else {
+            Alert.alert("Delete To Do", "Are you sure?", [
+                { text: "Cancel" },
+                {
+                    text: "I'm Sure",
+                    onPress: () => {
+                        const newToDos = { ...toDos };
+                        delete newToDos[key];
+                        setToDos(newToDos);
+                        saveToDos(newToDos);
+                    },
                 },
-            },
-        ]);
+            ]);
+        }
     };
 
     return (
