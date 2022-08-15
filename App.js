@@ -24,10 +24,9 @@ export default function App() {
 
     const loadToDos = async () => {
         let s = await AsyncStorage.getItem(STORAGE_KEY);
-        if (s === null) {
-            s = "{}";
+        if (s) {
+            setToDos(JSON.parse(s));
         }
-        setToDos(JSON.parse(s));
     };
 
     const addTodo = async () => {
